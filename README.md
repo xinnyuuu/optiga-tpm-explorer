@@ -1,9 +1,14 @@
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Python version](https://img.shields.io/badge/Python-3-green?logo=python)](https://www.python.org/)
+[![REUSE status](https://api.reuse.software/badge/github.com/RaymWong/optiga-tpm-explorer)](https://api.reuse.software/info/github.com/RaymWong/optiga-tpm-explorer)
+
 # OPTIGA™ TPM 2.0 Explorer
+
 The OPTIGA™ TPM 2.0 Explorer is a GUI-based tool for users to familiarize themselves with TPM 2.0 quickly and easily using Infineon's OPTIGA™ TPM 2.0 solution for Raspberry Pi. In addition, the OPTIGA™ TPM 2.0 Explorer demonstrates how the OPTIGA™ TPM 2.0 can be used to increase security and trust for data sharing across different networking and cloud platforms.
 
 Using this tool, you can instantly experience the benefits that [OPTIGA™ TPM 2.0](https://www.infineon.com/cms/en/product/security-smart-card-solutions/optiga-embedded-security-solutions/optiga-tpm/?redirId=39899/) will bring to IoT devices and network equipment.
 
-| ![](images/Setup/MainScreen.png) |
+| ![](docs/images/Setup/MainScreen.png) |
 | ------------------------------------------------------- |
 
 ## Features

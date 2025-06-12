@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Infineon Technologies AG
+#
+# SPDX-License-Identifier: MIT
+
 import wx
 import shell_util as exec_cmd
 import misc_dialogs as misc

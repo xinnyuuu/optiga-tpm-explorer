@@ -92,8 +92,8 @@ This section shows you the Setup features of the OPTIGA™ TPM 2.0 Explorer.
 
 Select "Setup and Basic Features". Enter the OPTIGA™ TPM Setup Menu.
 
-| ![](images/Optiga_Setup/Setup/MainScreen.png) |
-| --------------------------------------------- |
+| ![](docs/images/Optiga_Setup/Setup/MainScreen.png) |
+| -------------------------------------------------- |
 
 Figure 2: Setup and Basic Features Selection
 
@@ -102,8 +102,8 @@ Figure 2: Setup and Basic Features Selection
 
 Setup function descriptions 
 
-| ![](images/Optiga_Setup/Setup/TPM_SetupScreen1.png) |
-| --------------------------------------------------- |
+| ![](docs/images/Optiga_Setup/Setup/TPM_SetupScreen1.png) |
+| -------------------------------------------------------- |
 
 Figure 3: OPTIGA™ TPM Setup Menu Function Descriptions
 
@@ -218,8 +218,8 @@ Expected Output (Partial): After resetting to default mode, the owner, endorseme
 
 To change the lockout, endorsement, and owner authorization values of TPM, select "Change Auth" in the left panel.  In the pop-up dialog, click "SET ALL" to confirm the credentials. We’ll use the following values as an example.
 
-| ![](images/Optiga_Setup/Setup/SetAuthScreen.png) |
-| :----------------------------------------------: |
+| ![](docs/images/Optiga_Setup/Setup/SetAuthScreen.png) |
+| :---------------------------------------------------: |
 
 Figure 4: Configure authorization values in the pop-up dialog
 
@@ -240,8 +240,8 @@ Expected Output (Partial): If the owner, endorsement, and lockout authorization 
 
 Select "Dictionary Attack Settings" in the left panel to configure settings for dictionary attacks. In the pop-up dialog, configure the dictionary attack settings and select "OK" to confirm. You can change the number of attempts before lockout, the time taken for recovery from failure and lockout recovery.
 
-| ![](images/Optiga_Setup/Setup/DictionaryAttackSettings.png) |
-| :---------------------------------------------------------: |
+| ![](docs/images/Optiga_Setup/Setup/DictionaryAttackSettings.png) |
+| :----------------------------------------------------------: |
 
 Figure 5: Dictionary Attack Settings Configuration
 
@@ -300,8 +300,8 @@ From the "Setup and Basic Features" menu, select the "Platform Configuration Reg
 
 Platform Configuration Register function descriptions
 
-| ![](images/Optiga_Setup/PCR/TPMPCRScreen.png) |
-| --------------------------------------------- |
+| ![](docs/images/Optiga_Setup/PCR/TPMPCRScreen.png) |
+| -------------------------------------------------- |
 
 Figure 6: OPTIGA™ TPM Platform Configuration Registers Functions Descriptions
 
@@ -311,8 +311,8 @@ Figure 6: OPTIGA™ TPM Platform Configuration Registers Functions Descriptions
 
 To list all 24 PCRs using SHA-1/SHA-256/SHA-384, select the corresponding bank name from the dropdown at the top (SHA-1 as the default setting). A pop-up dialog will then be shown. Press the "RESET" button on the TPM to apply the change and select "Reset Pressed" in the dialog. Once done,  click 'PCR List All'.
 
-| ![](images/Optiga_Setup/PCR/TPMPCR_POPUP.png) |
-| :-------------------------------------------: |
+| ![](docs/images/Optiga_Setup/PCR/TPMPCR_POPUP.png) |
+| :------------------------------------------------: |
 
 Figure 7: PCR List All 24 Registers in SHA-256
 
@@ -410,8 +410,8 @@ From the "Setup and Basic Features" menu, select the "NVM and Certificate Manage
 
 NVM and Certificate Management function descriptions
 
-| ![](images/Optiga_Setup/NVM/TPMNVM_Screen.png) |
-| ---------------------------------------------- |
+| ![](docs/images/Optiga_Setup/NVM/TPMNVM_Screen.png) |
+| --------------------------------------------------- |
 
 Figure 8: OPTIGA™ TPM NVM and Certificate Management Functions Descriptions
 
@@ -648,8 +648,8 @@ This section shows you the functionalities of Handle Management in the OPTIGA™
 
 Handle Management function descriptions.
 
-| ![](images/Optiga_Setup/Handle_Management/TPMHM_MainScreen.png) |
-| --------------------------------------------------------------- |
+| ![](docs/images/Optiga_Setup/Handle_Management/TPMHM_MainScreen.png) |
+| ------------------------------------------------------------ |
 
 Figure 9: OPTIGA™ TPM Handle Management Functions Descriptions
 
@@ -751,8 +751,8 @@ Select "RSA".
 
 RSA Cryptographic Function Description
 
-| ![](images/CryptoFNS/RSA/CryptoRSAMain_Screen.png) |
-| -------------------------------------------------- |
+| ![](docs/images/CryptoFNS/RSA/CryptoRSAMain_Screen.png) |
+| ------------------------------------------------------- |
 
 Figure 10: RSA Cryptographic Function Description
 
@@ -845,7 +845,7 @@ Expected Output (Partial): RSA Encrypt with Default Input 168168
 
 The data has been encrypted.
 
-| ![](images/CryptoFNS/RSA/RSA_Unedited/TPMCryptoFn_RSAEncryptedData.png) |
+| ![](docs/images/CryptoFNS/RSA/RSA_Unedited/TPMCryptoFn_RSAEncryptedData.png) |
 | :----------------------------------------------------------: |
 
 Figure 11: Encrypted “data_encrypted.txt” shown in unreadable form
@@ -998,8 +998,8 @@ Select "ECC".
 
 ECC Cryptographic Function Description
 
-| ![](images/CryptoFNS/ECC/TPMCryptoFn_ECCMainScreen.png) |
-| ------------------------------------------------------- |
+| ![](docs/images/CryptoFNS/ECC/TPMCryptoFn_ECCMainScreen.png) |
+| ------------------------------------------------------------ |
 
 Figure 12: ECC Cryptographic Function Description
 
@@ -1201,8 +1201,8 @@ Select "RSA (Enc/Dec/Sign/Verify)".
 
 RSA (Enc/Dec/Sign/Verify) Function Description
 
-| ![](images/OpenSSL/RSA_Enc_Dec_Sign_Verify/X4_MainScreen.png) |
-| ------------------------------------------------------------- |
+| ![](docs/images/OpenSSL/RSA_Enc_Dec_Sign_Verify/X4_MainScreen.png) |
+| ------------------------------------------------------------ |
 
 Figure 13: RSA (Enc/Dec/Sign/Verify) Function Description
 
@@ -1319,8 +1319,8 @@ Select "ECC (Sign/Verify)".
 
 ECC (Sign/Verify) Function Description
 
-| ![](images/OpenSSL/ECC_Sign_Verify/ECC_SV_function.png) |
-| ------------------------------------------------------- |
+| ![](docs/images/OpenSSL/ECC_Sign_Verify/ECC_SV_function.png) |
+| ------------------------------------------------------------ |
 
 Figure 14: ECC (Sign/Verify) Function Description
 
@@ -1402,7 +1402,7 @@ This section shows the use of OpenSSL libraries in generating a random hex or ba
 
 Select "RNG".
 
-| ![](images/OpenSSL/RNG/RNG_Unedited/TPMOSSL_RNG_MainScreen.png) |
+| ![](docs/images/OpenSSL/RNG/RNG_Unedited/TPMOSSL_RNG_MainScreen.png) |
 | ------------------------------------------------------------ |
 
 Figure 15: OpenSSL-Provider RNG Screen
@@ -1439,8 +1439,8 @@ The drawback is that their implementation is using software library modules that
 
 RSA (Client/Server) Function
 
-| ![](images/OpenSSL/RSA_Client_Server/X2.png) |
-| -------------------------------------------- |
+| ![](docs/images/OpenSSL/RSA_Client_Server/X2.png) |
+| ------------------------------------------------- |
 
 Figure 16: RSA (Client/Server) Function Description
 
@@ -1530,8 +1530,8 @@ b) TLS Cipher
 
 As shown in Figure 17 the complete TLS handshake process was successful, and the encrypted channel established.
 
-| ![](images/OpenSSL/RSA_Client_Server/TPMOSSL_RSA_StartClient.png) |
-| ----------------------------------------------------------------- |
+| ![](docs/images/OpenSSL/RSA_Client_Server/TPMOSSL_RSA_StartClient.png) |
+| ------------------------------------------------------------ |
 
 Figure 17: OpenSSL-Provider RSA (Client/Server) Start Client Succeed
 
@@ -1541,8 +1541,8 @@ Figure 17: OpenSSL-Provider RSA (Client/Server) Start Client Succeed
 
 Messages can be sent from Server to Client as well as Client to Server by entering input in the boxes below and selecting "Write to Server" or "Write to Client". The message "Hello from Client" and "Hello from Server" has been successfully sent in Figure 18.
 
-| ![](images/OpenSSL/RSA_Client_Server/TPMOSSL_RSA_ClientServerCommunication.png) |
-| ------------------------------------------------------------------------------- |
+| ![](docs/images/OpenSSL/RSA_Client_Server/TPMOSSL_RSA_ClientServerCommunication.png) |
+| ------------------------------------------------------------ |
 
 Figure 18: OpenSSL-Provider RSA (Client/Server) Communication
 
@@ -1562,8 +1562,8 @@ Select "ECC (Client/Server)".
 
 ECC (Client/Server) Function Description
 
-| ![](images/OpenSSL/ECC_Client_Server/X3.png) |
-| -------------------------------------------- |
+| ![](docs/images/OpenSSL/ECC_Client_Server/X3.png) |
+| ------------------------------------------------- |
 
 Figure 19: ECC (Client/Server) Function Description
 
@@ -1653,8 +1653,8 @@ b) TLS Cipher
 
 As shown in Figure 20 the complete TLS handshake process was successful, and the encrypted channel
 
-| ![](images/OpenSSL/ECC_Client_Server/Start_Client.png) |
-| ------------------------------------------------------- |
+| ![](docs/images/OpenSSL/ECC_Client_Server/Start_Client.png) |
+| ----------------------------------------------------------- |
 
 Figure 20: OpenSSL-Provider ECC (Client/Server) Start Client
 
@@ -1664,8 +1664,8 @@ Figure 20: OpenSSL-Provider ECC (Client/Server) Start Client
 
 Messages can be sent from Server to Client as well as Client to Server by entering input in the boxes below and selecting "Write to Server" or "Write to Client". The message "Hello from Client" and "Hello from Server" has been successfully sent in Figure 21.
 
-| ![](images/OpenSSL/ECC_Client_Server/TPMOSSL_ECC_ClientServerCommunication.png) |
-| ------------------------------------------------------------------------------- |
+| ![](docs/images/OpenSSL/ECC_Client_Server/TPMOSSL_ECC_ClientServerCommunication.png) |
+| ------------------------------------------------------------ |
 
 Figure 21: OpenSSL-Provider ECC (Client/Server) Communication
 
@@ -1683,8 +1683,8 @@ Sealing permits the key or secret to be protected not only by a password but by 
 
 Data Sealing with Policy Function Description
 
-| ![](images/Data_Sealing_with_Policy/TPMEA_MainScreen.png) |
-| --------------------------------------------------------- |
+| ![](docs/images/Data_Sealing_with_Policy/TPMEA_MainScreen.png) |
+| ------------------------------------------------------------ |
 
 Figure 22: Data Sealing with Policy Function Description
 
@@ -1847,8 +1847,8 @@ Go back to the main screen and select "Attestation".
 
 A TPM attestation offers cryptographic proof of software state. The attestation is a TPM quote: a number of PCR are hashed, and that hash is signed by a TPM key known as attestation key. If the remote party can validate that the signing key came from an authentic TPM, it can be assured that the PCR digest report has not been altered. The device remote attestation supported by Infineon's OPTIGA™ TPM lets users check that their devices have not been manipulated to establish the trust in the devices.
 
-| ![](images/Attestation/TPMAttestation_MainScreen.png) |
-| ----------------------------------------------------- |
+| ![](docs/images/Attestation/TPMAttestation_MainScreen.png) |
+| ---------------------------------------------------------- |
 
 Figure 23: Attestation Function Description
 

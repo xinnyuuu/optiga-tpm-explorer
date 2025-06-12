@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Infineon Technologies AG
+#
+# SPDX-License-Identifier: MIT
+
 import wx
 import tab1_setup as t1
 import tab2_crypto as t2

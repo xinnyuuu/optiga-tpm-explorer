@@ -11,8 +11,8 @@ This page provides instructions on how to install and configure the Raspberry Pi
 
 This tool was tested on a Raspberry Pi (RPi) 3 Model B+/ RPi 4 Model B / RPi 5 with Debian Linux in Release Version 12 (Bookworm) and kernel version 6.12.25 using an Infineon OPTIGA™ TPM SLB 9670/72/73 TPM2.0 attached to the Raspberry Pi board.
 
-| ![](images/Overview/TPMRPI4.png) |
-| :------------------------------: |
+| ![](docs/images/Overview/TPMRPI4.png) |
+| :-----------------------------------: |
 
 Figure 1: Infineon OPTIGA™ TPM SLB 9672 RPI Evaluation Board on a Raspberry Pi 4
 
@@ -55,12 +55,11 @@ cd optiga-tpm-explorer
 Once complete, run the program by:
 
 ```shell
-cd ~/optiga-tpm-explorer/Python_TPM20_GUI/
 ./start_gui.sh
 ```
 OPTIGA™ TPM 2.0 Explorer main menu will appear.
 
-| ![](images/Setup/MainScreen.png) |
+| ![](docs/images/Setup/MainScreen.png) |
 | ------------------------------------------------------- |
 
 **Figure 1**: Home Screen of OPTIGA™ TPM 2.0 Explorer
@@ -71,8 +70,8 @@ For more information on the OPTIGA™ TPM 2.0 Explorer, please refer to the [OPT
 
 If OPTIGA™ TPM 2.0 Explorer failed to launch:
 
-| ![](images/Setup/insert_tpm_module.png) |
-| :-------------------------------------: |
+| ![](docs/images/Setup/insert_tpm_module.png) |
+| :------------------------------------------: |
 
 **Figure 2**: Error message indicating 'Device not found' when opening the GUI tool
 

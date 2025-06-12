@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# SPDX-FileCopyrightText: 2025 Infineon Technologies AG
+#
+# SPDX-License-Identifier: MIT
+
 CONFIG_FILENAME="/boot/firmware/config.txt"
 TPM_SPI_OVERLAY="dtoverlay=tpm-slb9670"
 TPM_I2C_OVERLAY="dtoverlay=tpm-slb9673"
@@ -16,12 +20,15 @@ sudo apt --yes install libtss2-* tpm-udev tpm2-abrmd tpm2-tools tpm2-openssl pyt
 
 # Add current user to tss group
 sudo usermod --append --groups tss $(whoami)
-
+BASEDIR=$(realpath $(dirname $0))
 # Build the Python TPM GUI binary
-cd $PWD/Python_TPM20_GUI/
+cd $PWD/src/Python_TPM20_GUI/
 sudo chmod a+rwx create_binary_package.sh 
 ./create_binary_package.sh
-cd bin/
+set +e
+sudo rm ${BASEDIR}/start_gui.sh 2> /dev/null
+set -e
+sudo ln -s ${BASEDIR}/src/Python_TPM20_GUI/bin/start_gui.sh  ${BASEDIR}/start_gui.sh
 
 # Modify config.txt if it exists
 if [ -f "$CONFIG_FILENAME" ]; then

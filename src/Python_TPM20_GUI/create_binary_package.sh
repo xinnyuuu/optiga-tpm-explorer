@@ -1,5 +1,9 @@
+# SPDX-FileCopyrightText: 2025 Infineon Technologies AG
+#
+# SPDX-License-Identifier: MIT
+
 python3 -m compileall -b .
-sudo rm -r bin 
+sudo rm -r bin 2> /dev/null
 mkdir bin
 mkdir ./bin/working_space
 mkdir ./bin/images
@@ -14,5 +18,3 @@ echo "python3 main.pyc" >> ./bin/start_gui.sh
 git log -1 --format="%H" >> ./bin/commit_info
 sudo chmod 777 ./bin/start_gui.sh
 rm *.pyc
-sudo rm ${BASEDIR}/start_gui.sh 2> /dev/null
-sudo ln -s ${BASEDIR}/bin/start_gui.sh  ${BASEDIR}/start_gui.sh
