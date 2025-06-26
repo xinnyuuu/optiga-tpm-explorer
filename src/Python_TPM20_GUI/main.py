@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Infineon Technologies AG
-#
-# SPDX-License-Identifier: MIT
-
 import wx
 import tab1_setup as t1
 import tab2_crypto as t2
@@ -16,132 +12,115 @@ import wx.lib.inspection
 
 class MainFrame(wx.Frame):
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title="OPTIGA"+ u"\u1d40\u1d39"+" TPM 2.0 Explorer", 
-                         style=(wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)))
-        
-        # Base configuration values (preserving original font sizes)
-        self.base_resolution = (1280, 720)  # Reference resolution
-        self.base_font_size = 16            # Original button font size
-        self.base_title_size = 30            # Original title font size
-        self.base_spacing = 5                # Reference spacing unit
-        
-        # Initialize settings
+        wx.Frame.__init__(self, parent, title="OPTIGA"+ u"\u1d40\u1d39"+" TPM 2.0 Explorer", style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
         self.SetBackgroundColour(wx.WHITE)
-        self.resolution = self.base_resolution
-        self.scale_factor = 1.0  # Default scale factor
+        self.winsize = (1280, 720)
         
-        # Create all UI components
-        self.create_widgets()
-        self.setup_layout()
-        self.bind_events()
-        
-        # Apply initial scaling
-        self.scale_components(self.scale_factor)
-        self.SetSizer(self.mainsizer)
-        self.mainsizer.Fit(self)
-        self.Centre()
-        self.Check_IFX_TPM()
-        
-    def create_widgets(self):
-        """Create all UI components with original font sizes"""
-        # Set main font (preserving original size)
-        main_menu_font = wx.Font(self.base_font_size, wx.FONTFAMILY_SWISS, 
-                               wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
-        self.SetFont(main_menu_font)
-        
-        # Create buttons
+        # Base window dimensions (reference size for scaling)
+        self.base_width = 1280
+        self.base_height = 720
+
+        # Create title and font
+        self.main_font_size = 16
+        self.title_font_size = 30
+        self.main_font = wx.Font(self.main_font_size, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        self.title_font = wx.Font(self.title_font_size, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
+        self.SetFont(self.main_font)
+
+        # Create all the button widgets first
         self.button1 = wx.Button(self, -1, 'Setup and Basic Features')
         self.button2 = wx.Button(self, -1, 'Cryptographic Functions')
         self.button3 = wx.Button(self, -1, 'OpenSSL-Provider')
         self.button4 = wx.Button(self, -1, 'Data Sealing with Policy')
         self.button5 = wx.Button(self, -1, 'Attestation')
+        # Title
+        self.title_screen = wx.StaticText(self, -1, style=wx.ALIGN_CENTER, label="OPTIGA" + u"\u1d40\u1d39" + " TPM 2.0 Explorer")
+        self.title_screen.SetFont(self.title_font)
         
-        # Resolution selector
-        self.resolution_choice = wx.Choice(self, choices=["1280x720", "1024x600", "800x400"])
-        self.resolution_choice.SetSelection(0)
+        # Save image paths
+        self.image_paths = {
+            "tpm": "../images/tpm_slb_9670.png",
+            "ifx": "../images/250px-Infineon-Logo.png",
+            "tab1": "../images/setup.png",
+            "tab2": "../images/crypto.png",
+            "tab3": "../images/engine.png",
+            "tab4": "../images/policy.png",
+            "tab5": "../images/attest.png",
+        }
         
-        # Create title with original font size
-        self.title_screen = wx.StaticText(self, -1, style=wx.ALIGN_CENTER, 
-                                        label="OPTIGA"+ u"\u1d40\u1d39"+" TPM 2.0 Explorer")
-        title_font = wx.Font(self.base_title_size, wx.FONTFAMILY_SWISS, 
-                          wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
-        self.title_screen.SetFont(title_font)
+        # Images
+        self.tpm_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["tpm"]))
+        self.ifx_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["ifx"]))
+        self.tab1_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["tab1"]))
+        self.tab2_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["tab2"]))
+        self.tab3_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["tab3"]))
+        self.tab4_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["tab4"]))
+        self.tab5_image = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(self.image_paths["tab5"]))
         
-        # Load all images
-        self.tpm_image = self.load_image('../images/tpm_slb_9670.png')
-        self.ifx_image = self.load_image('../images/250px-Infineon-Logo.png')
-        self.tab1_image = self.load_image('../images/setup.png')
-        self.tab2_image = self.load_image('../images/crypto.png')
-        self.tab3_image = self.load_image('../images/engine.png')
-        self.tab4_image = self.load_image('../images/policy.png')
-        self.tab5_image = self.load_image('../images/attest.png')
+        #Window size choice list
+        size_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.size_label = wx.StaticText(self, label="Window Size:")
+        self.winsize_choice = wx.Choice(self, choices=["1280x720", "1024x600", "800x400"])
+        self.winsize_choice.SetSelection(0)  # default 1280x720
+        size_sizer.Add(self.size_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        size_sizer.Add(self.winsize_choice, 0, wx.ALIGN_CENTER_VERTICAL)
         
-        # Store all image widgets for later scaling
-        self.image_widgets = [
-            self.tpm_image, self.ifx_image, 
-            self.tab1_image, self.tab2_image, self.tab3_image,
-            self.tab4_image, self.tab5_image
-        ]
-
-    def load_image(self, path):
-        """Load image from file and return StaticBitmap"""
-        image = wx.Image(path, wx.BITMAP_TYPE_PNG)
-        return wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(image))
-
-    def setup_layout(self):
-        """Initialize layout with proportional spacers"""
-        # Resolution selector layout
-        res_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        res_sizer.AddStretchSpacer(1)
-        res_sizer.Add(wx.StaticText(self, label="Resolution: "), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
-        res_sizer.Add(self.resolution_choice, 0, wx.ALIGN_CENTER_VERTICAL)
-        
-        # Main sizer structure
-        self.mainsizer = wx.BoxSizer(wx.VERTICAL)
+        # declare the sizers
+        mainsizer = wx.BoxSizer(wx.VERTICAL)
         horisizer = wx.BoxSizer(wx.HORIZONTAL)
-        horisizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.gdsizer = wx.GridSizer(rows=4, cols=3, vgap=0, hgap=5)
+        gdsizer = wx.GridSizer(rows=4, cols=3, vgap=0, hgap=5)
         
-        # Add components with proportional spacing
-        horisizer.AddSpacer(int(25 * self.scale_factor))
-        horisizer.Add(self.tpm_image, 0, wx.TOP, int(17 * self.scale_factor))
-        horisizer.AddSpacer(int(175 * self.scale_factor))
-        horisizer.Add(self.title_screen, 0, wx.ALIGN_CENTRE)
-        horisizer.AddSpacer(int(145 * self.scale_factor))
-        horisizer.Add(self.ifx_image, 0, wx.TOP, int(10 * self.scale_factor))
+
+        horisizer.Add(self.tpm_image, 0, wx.LEFT | wx.TOP, 17)
+        horisizer.AddStretchSpacer(1)
+        horisizer.Add(self.title_screen, 0, wx.ALIGN_CENTER)
+        horisizer.AddStretchSpacer(1)
+        horisizer.Add(self.ifx_image, 0, wx.TOP, 10)
+
+        gdsizer.Add(self.tab1_image, 0, wx.ALIGN_CENTRE | wx.TOP, 5)
+        gdsizer.Add(self.tab2_image, 0, wx.ALIGN_CENTRE | wx.TOP, 5)
+        gdsizer.Add(self.tab3_image, 0, wx.ALIGN_CENTRE | wx.TOP, 5)
+
+        gdsizer.Add(self.button1, 1, wx.EXPAND | wx.ALL, 30)
+        gdsizer.Add(self.button2, 1, wx.EXPAND | wx.ALL, 30)
+        gdsizer.Add(self.button3, 1, wx.EXPAND | wx.ALL, 30)
+
+        gdsizer.Add(self.tab4_image, 0, wx.ALIGN_CENTRE | wx.TOP, 5)
+        gdsizer.Add(self.tab5_image, 0, wx.ALIGN_CENTRE | wx.TOP, 5)
+        gdsizer.AddSpacer(1)
+
+        gdsizer.Add(self.button4, 1, wx.EXPAND | wx.ALL, 30)
+        gdsizer.Add(self.button5, 1, wx.EXPAND | wx.ALL, 30)
+        gdsizer.Add(size_sizer, 0, wx.ALIGN_CENTRE | wx.TOP, 5)
+
+        mainsizer.Add(horisizer, 0, wx.EXPAND | wx.TOP, 20)
+        mainsizer.Add(-1, 31)
+        mainsizer.Add(gdsizer, 1, wx.EXPAND)
         
-        horisizer2.AddSpacer(int(1278 * self.scale_factor))
+        #Original sizer values
+        self.orig_values = {
+            'spacer': 31,
+            'horisizer_borders': {
+                'tpm': (wx.LEFT | wx.TOP, 17),
+                'ifx': (wx.TOP, 10)
+            },
+            'grid_borders': {
+                'images': (wx.ALIGN_CENTRE | wx.TOP, 5),
+                'buttons': (wx.ALL, 30),
+                'choice': (wx.ALIGN_CENTRE | wx.TOP, 5)
+            },
+            'grid_gaps': (0, 5)  # (vgap, hgap)
+        }
 
-        self.gdsizer.Add(self.tab1_image, 0, wx.ALIGN_CENTRE | wx.TOP, int(5 * self.scale_factor))
-        self.gdsizer.Add(self.tab2_image, 0, wx.ALIGN_CENTRE | wx.TOP, int(5 * self.scale_factor))
-        self.gdsizer.Add(self.tab3_image, 0, wx.ALIGN_CENTRE | wx.TOP, int(5 * self.scale_factor))
-
-        self.gdsizer.Add(self.button1, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(self.button2, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(self.button3, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-
-        self.gdsizer.Add(self.tab4_image, 0, wx.ALIGN_CENTRE | wx.TOP, int(5 * self.scale_factor))
-        self.gdsizer.Add(self.tab5_image, 0, wx.ALIGN_CENTRE | wx.TOP, int(5 * self.scale_factor))
-        self.gdsizer.AddSpacer(1)
-
-        self.gdsizer.Add(self.button4, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(self.button5, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(res_sizer, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        
-        self.mainsizer.Add(horisizer, 0, wx.EXPAND | wx.TOP, int(20 * self.scale_factor))
-        self.mainsizer.Add(horisizer2)
-        self.mainsizer.AddSpacer(int(31 * self.scale_factor))
-        self.mainsizer.Add(self.gdsizer, 1, wx.EXPAND)
-        
-    def bind_events(self):
-        """Connect UI events to handlers"""
+        # Bind events
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.button1)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.button2)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.button3)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.button4)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.button5)
-        self.resolution_choice.Bind(wx.EVT_CHOICE, self.OnResolutionChange)
+        self.winsize_choice.Bind(wx.EVT_CHOICE, self.OnWinSizeChange)
+
 
         # Set tooltips
         self.button1.SetToolTip(wx.ToolTip("Take ownership here."))
@@ -149,101 +128,13 @@ class MainFrame(wx.Frame):
         self.button3.SetToolTip(wx.ToolTip("Using TPM and OpenSSL to establish a client-server connection"))
         self.button4.SetToolTip(wx.ToolTip("Making use of policies to seal and unseal objects"))
         self.button5.SetToolTip(wx.ToolTip("Using endorsement key hierarchies to prove/attest"))
+
+        self.SetSizer(mainsizer)
         
-    def scale_components(self, scale_factor):
-        """Scale components proportionally while preserving font sizes"""
-        self.scale_factor = scale_factor
-        
-        # Scale images proportionally
-        for image_widget in self.image_widgets:
-            bmp = image_widget.GetBitmap()
-            img = bmp.ConvertToImage()
-            orig_width, orig_height = img.GetWidth(), img.GetHeight()
-            new_width = int(orig_width * scale_factor)
-            new_height = int(orig_height * scale_factor)
-            
-            if new_width > 0 and new_height > 0:
-                img = img.Scale(new_width, new_height, wx.IMAGE_QUALITY_HIGH)
-                image_widget.SetBitmap(wx.Bitmap(img))
-        
-        # Remove existing sizer completely
-        self.SetSizer(None)
-        
-        # Create fresh sizers
-        self.mainsizer = wx.BoxSizer(wx.VERTICAL)
-        self.gdsizer = wx.GridSizer(rows=4, cols=3, vgap=0, hgap=5)
-        
-        # Create resolution selector layout again
-        res_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        res_sizer.AddStretchSpacer(1)
-        res_sizer.Add(wx.StaticText(self, label="Resolution: "), 0, 
-                      wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
-        res_sizer.Add(self.resolution_choice, 0, wx.ALIGN_CENTER_VERTICAL)
-        
-        # Create horizontal sizers
-        horisizer = wx.BoxSizer(wx.HORIZONTAL)
-        horisizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        
-        # Add components to horizontal sizer
-        horisizer.AddSpacer(int(25 * self.scale_factor))
-        horisizer.Add(self.tpm_image, 0, wx.TOP, int(17 * self.scale_factor))
-        horisizer.AddSpacer(int(175 * self.scale_factor))
-        horisizer.Add(self.title_screen, 0, wx.ALIGN_CENTRE)
-        horisizer.AddSpacer(int(145 * self.scale_factor))
-        horisizer.Add(self.ifx_image, 0, wx.TOP, int(10 * self.scale_factor))
-        
-        horisizer2.AddSpacer(int(1278 * self.scale_factor))
-        
-        # Add components to grid sizer
-        self.gdsizer.Add(self.tab1_image, 0, wx.ALIGN_CENTRE | wx.TOP, 
-                         int(5 * self.scale_factor))
-        self.gdsizer.Add(self.tab2_image, 0, wx.ALIGN_CENTRE | wx.TOP, 
-                         int(5 * self.scale_factor))
-        self.gdsizer.Add(self.tab3_image, 0, wx.ALIGN_CENTRE | wx.TOP, 
-                         int(5 * self.scale_factor))
-        
-        self.gdsizer.Add(self.button1, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(self.button2, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(self.button3, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        
-        self.gdsizer.Add(self.tab4_image, 0, wx.ALIGN_CENTRE | wx.TOP, 
-                         int(5 * self.scale_factor))
-        self.gdsizer.Add(self.tab5_image, 0, wx.ALIGN_CENTRE | wx.TOP, 
-                         int(5 * self.scale_factor))
-        self.gdsizer.AddSpacer(1)
-        
-        self.gdsizer.Add(self.button4, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(self.button5, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        self.gdsizer.Add(res_sizer, 1, wx.EXPAND | wx.ALL, int(30 * self.scale_factor))
-        
-        # Build final layout
-        self.mainsizer.Add(horisizer, 0, wx.EXPAND | wx.TOP, int(20 * self.scale_factor))
-        self.mainsizer.Add(horisizer2)
-        self.mainsizer.AddSpacer(int(31 * self.scale_factor))
-        self.mainsizer.Add(self.gdsizer, 1, wx.EXPAND)
-        
-        # Apply new layout
-        self.SetSizer(self.mainsizer)
-        self.Layout()
-        self.Fit()
         self.Centre()
-            
-    def OnResolutionChange(self, event):
-        """Handle resolution selection changes"""
-        choice = self.resolution_choice.GetStringSelection()
-        width, height = map(int, choice.split('x'))
+        self.AdjustWinSize(1280, 720)
+        self.Check_IFX_TPM()
         
-        # Calculate proportional scaling factor
-        scale_factor_w = width / self.base_resolution[0]
-        scale_factor_h = height / self.base_resolution[1]
-        scale_factor = min(scale_factor_w, scale_factor_h)
-        
-        # Apply new scaling
-        self.scale_components(scale_factor)
-        self.SetSize((width, height))
-        self.resolution = (width, height)
-        self.Centre()
-    
     def Check_IFX_TPM(self):
             cmd =" ls /dev/tpm0"
             ps_command = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
@@ -253,7 +144,7 @@ class MainFrame(wx.Frame):
                 misc.Not_IFX_TPM_Dlg(self, "TPM Device Not Found").ShowModal()
                 self.Disable_Buttons()              
                 return
-                        
+
             cmd =" tpm2_getcap properties-fixed | grep -A2 'MANUFACTURER' | grep value | grep -Eo '[A-Z]*'"
             ps_command = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
             command_output = ps_command.stdout.read()
@@ -290,7 +181,119 @@ class MainFrame(wx.Frame):
         else:
             return
         self.Hide()
+        
+    def OnWinSizeChange(self, event):
+        selected = self.winsize_choice.GetStringSelection()
+        width, height = map(int, selected.split("x"))
+        self.winsize = (width, height)
+        self.AdjustWinSize(width, height)
 
+    def AdjustWinSize(self, width, height):
+        # Calculate scaling factors
+        width_scale = width / self.base_width
+        height_scale = height / self.base_height
+        scale_factor = min(width_scale, height_scale)  # Maintain aspect ratio
+        
+        # Set window properties
+        self.SetWindowStyle(wx.DEFAULT_FRAME_STYLE)
+        self.SetSize((width, height))
+        
+        # Font Scaling
+        new_main_font = wx.Font(int(self.main_font_size * scale_factor),
+                              wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        new_title_font = wx.Font(int(self.title_font_size * scale_factor),
+                               wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
+        self.SetFont(new_main_font)
+        self.title_screen.SetFont(new_title_font)
+
+        # Button Scaling
+        button_font = wx.Font(int(self.main_font_size * scale_factor),
+                             wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        for button in [self.button1, self.button2, self.button3, self.button4, self.button5]:
+            # Scale physical dimensions
+            button.SetMinSize((
+                int(button.GetSize().width * width_scale),
+                int(button.GetSize().height * height_scale)
+            ))
+            # Scale font
+            button.SetFont(button_font)
+
+        # Image Scaling
+        def scale_image(path, widget):
+            img = wx.Image(path, wx.BITMAP_TYPE_PNG)
+            orig_w, orig_h = img.GetSize()
+            new_w = int(orig_w * width_scale)
+            new_h = int(orig_h * height_scale)
+            
+            # Preserve aspect ratio if needed
+            if abs(width_scale - height_scale) > 0.1:  # Significant difference
+                new_h = int(orig_h * width_scale)  # Match width scaling
+            
+            img = img.Scale(new_w, new_h, wx.IMAGE_QUALITY_HIGH)
+            widget.SetBitmap(wx.Bitmap(img))
+
+        # Scale all images
+        for key, widget in [
+            ("tpm", self.tpm_image),
+            ("ifx", self.ifx_image),
+            ("tab1", self.tab1_image),
+            ("tab2", self.tab2_image),
+            ("tab3", self.tab3_image),
+            ("tab4", self.tab4_image),
+            ("tab5", self.tab5_image)
+        ]:
+            scale_image(self.image_paths[key], widget)
+
+        # Sizer Adjustments
+        self.UpdateSizerItems(scale_factor)
+        
+        #Choice list
+        new_choice_font = wx.Font(int(self.main_font_size * scale_factor),
+                             wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        self.winsize_choice.SetFont(new_choice_font)
+        self.size_label.SetFont(new_choice_font)
+
+        # Final Layout
+        self.SetWindowStyle(wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
+        self.Layout()
+        self.Refresh()
+
+    def UpdateSizerItems(self, scale_factor):
+        spacer_item = self.GetSizer().GetItem(1)
+        spacer_item.AssignSpacer((-1, int(self.orig_values['spacer'] * scale_factor)))
+        
+        horisizer = self.GetSizer().GetItem(0).GetSizer()
+        
+        item = horisizer.GetItem(0)
+        flags, border = self.orig_values['horisizer_borders']['tpm']
+        item.SetBorder(int(border * scale_factor))
+        
+        item = horisizer.GetItem(horisizer.GetItemCount()-1)
+        flags, border = self.orig_values['horisizer_borders']['ifx']
+        item.SetBorder(int(border * scale_factor))
+        
+        gdsizer = self.GetSizer().GetItem(2).GetSizer()
+        vgap, hgap = self.orig_values['grid_gaps']
+        gdsizer.SetVGap(int(vgap * scale_factor))
+        gdsizer.SetHGap(int(hgap * scale_factor))
+        
+        for i in range(gdsizer.GetItemCount()):
+            item = gdsizer.GetItem(i)
+            widget = item.GetWindow()
+            
+            if widget in [self.tab1_image, self.tab2_image, self.tab3_image, 
+                          self.tab4_image, self.tab5_image]:
+                flags, border = self.orig_values['grid_borders']['images']
+                item.SetBorder(int(border * scale_factor))
+                
+            elif widget in [self.button1, self.button2, self.button3, 
+                           self.button4, self.button5]:
+                flags, border = self.orig_values['grid_borders']['buttons']
+                item.SetBorder(int(border * scale_factor))
+                
+            elif widget == self.winsize_choice:
+                flags, border = self.orig_values['grid_borders']['choice']
+                item.SetBorder(int(border * scale_factor))
 
 class Main(wx.App):
     def __init__(self, redirect=False, filename=None):
@@ -301,6 +304,11 @@ class Main(wx.App):
 #         wx.lib.inspection.InspectionTool().Show()
         dlg.Show()
 
+
+# Always executes as this is the main file anyway
+# Note: This changes the working directory to /working_space, thus all created objects will be there
+# Navigation always starts from the /working_space folder.
 if __name__ == "__main__":
-    app = Main()
+    exec_cmd.checkDir()
+    app = Main() 
     app.MainLoop()

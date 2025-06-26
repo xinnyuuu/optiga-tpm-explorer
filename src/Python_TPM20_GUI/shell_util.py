@@ -6,6 +6,7 @@ import subprocess
 import os
 from subprocess import PIPE
 import json
+import wx
 
 # Variables to hold the 3 authorisation values
 ownerAuth = ""
@@ -199,3 +200,18 @@ def save_partial_auth(ownerAuth=None, endorseAuth=None, lockoutAuth=None, nvAuth
             json.dump(values, f, indent=2)
     except Exception as e:
         print(f"Error saving auth values: {e}")
+        
+def get_scaled_bitmap(path, width_scale, height_scale, preserve_aspect_ratio=True):
+    img = wx.Image(path, wx.BITMAP_TYPE_ANY)
+    orig_w, orig_h = img.GetSize()
+
+    if preserve_aspect_ratio:
+        scale = width_scale
+        new_w = int(orig_w * scale)
+        new_h = int(orig_h * scale)
+    else:
+        new_w = int(orig_w * width_scale)
+        new_h = int(orig_h * height_scale)
+
+    img = img.Scale(new_w, new_h, wx.IMAGE_QUALITY_HIGH)
+    return wx.Bitmap(img)

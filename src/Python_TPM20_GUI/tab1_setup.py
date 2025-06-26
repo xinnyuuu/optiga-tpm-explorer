@@ -31,10 +31,16 @@ tpm2_lockout_interval = None
 tpm2_lockout_recovery = None
 client_log = None
 
+width_scale = 1
+height_scale = 1
+scale_factor = 1
+
 class Tab_Setup(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        
+        global width_scale
+        global height_scale
+        global scale_factor
         # declare the sizers
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         buttonsizer = wx.BoxSizer(wx.VERTICAL)
@@ -51,13 +57,13 @@ class Tab_Setup(wx.Panel):
         button_getCapFix = wx.Button(self, -1, 'Get TPM capability (fixed)')
         self.text_display = wx.TextCtrl(self, -1, style=(wx.TE_MULTILINE | wx.TE_READONLY))
         #~ self.text_display.SetFont(wx.Font(14, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-        self.text_display.SetFont(wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        self.text_display.SetFont(wx.Font(int(12 *scale_factor), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
-        clearimage = wx.Image('../images/clear.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        clearimage = exec_cmd.get_scaled_bitmap('../images/clear.png', width_scale, height_scale)
         clearbutton = wx.BitmapButton(self, -1, clearimage)
         # ~ clearbutton = wx.BitmapButton(self, -1, img.clear.getBitmap())
 
-        backimage = wx.Image('../images/back.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        backimage = exec_cmd.get_scaled_bitmap('../images/back.png', width_scale, height_scale)
         backbutton = wx.BitmapButton(self, -1, backimage)
         # ~ backbutton = wx.BitmapButton(self, -1, img.back.getBitmap())
 
@@ -254,6 +260,9 @@ class Tab_Setup(wx.Panel):
 class Tab_PCR(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+        global width_scale
+        global height_scale
+        global scale_factor
 
         # declare the sizers
         mainsizer = wx.BoxSizer(wx.VERTICAL)
@@ -262,46 +271,58 @@ class Tab_PCR(wx.Panel):
         bottom_row_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # instantiate the objects
-        #self.sha_checkbox = wx.CheckBox(self, -1, "For PCR List && Extend: Checked = SHA-2, Unchecked = SHA-1")
-        #self.sha_checkbox.SetValue(True)
-        self.sha_listtext = wx.StaticText(self, -1, "For PCR List && Extend: ")
+        self.sha_listtext = wx.StaticText(self, -1, "For PCR List && Extend:")
         self.sha_listchoice = wx.ComboBox(self, -1, choices=pcr_bank_list, style=wx.CB_READONLY)
-        text_for_pcrbank = wx.StaticText(self, -1, "Choose your PCR Index: ")
+        self.sha_listchoice.SetMinSize((-1, int(35 * height_scale)))
+        text_for_pcrbank = wx.StaticText(self, -1, "Choose your PCR Index:")
         self.pcr_bank_choice = wx.ComboBox(self, -1, "Pick the PCR Index", choices=pcr_index_list, style=wx.CB_READONLY)
-        text_for_userinput = wx.StaticText(self, -1, "Input for PCR operations: ")
+        self.pcr_bank_choice .SetMinSize((-1, int(35 * height_scale)))
+        text_for_userinput = wx.StaticText(self, -1, "Input for PCR operations:")
         self.user_input = wx.TextCtrl(self, -1)
+        self.user_input .SetMinSize((-1, int(35 * height_scale)))
         button_pcrlistall = wx.Button(self, -1, 'PCR List All')
         button_pcrlist = wx.Button(self, -1, 'PCR List')
         button_pcrextend = wx.Button(self, -1, 'PCR Extend')
         button_pcrevent = wx.Button(self, -1, 'PCR Event')
         self.bottom_txt_display = wx.TextCtrl(self, -1, style=(wx.TE_MULTILINE | wx.TE_READONLY))
-        self.bottom_txt_display.SetFont(wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-        clearimage = wx.Image('../images/clear.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        self.bottom_txt_display.SetFont(wx.Font(int(12 *scale_factor), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        
+        clearimage = exec_cmd.get_scaled_bitmap('../images/clear.png', width_scale, height_scale)
         clearbutton = wx.BitmapButton(self, -1, clearimage)
-        # ~clearbutton = wx.BitmapButton(self, -1, img.clear.getBitmap())
 
-        backimage = wx.Image('../images/back.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        backimage = exec_cmd.get_scaled_bitmap('../images/back.png', width_scale, height_scale)
         backbutton = wx.BitmapButton(self, -1, backimage)
-        # ~backbutton = wx.BitmapButton(self, -1, img.back.getBitmap())
-
 
         # attach the sizers to the main sizer
-        mainsizer.Add(top_row_sizer, 0, wx.TOP | wx.LEFT, 5)
+        mainsizer.Add(top_row_sizer, 0, wx.EXPAND | wx.TOP | wx.LEFT, 5)
         mainsizer.Add(middle_row_sizer, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
         mainsizer.Add(bottom_row_sizer, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
         mainsizer.Add(self.bottom_txt_display, 1, wx.EXPAND | wx.TOP, 5)
-
-        # attach the ui elements to the internal sizer
-        #top_row_sizer.Add(self.sha_checkbox, 0, wx.ALL, 5)
-        top_row_sizer.Add(self.sha_listtext, 2, wx.ALIGN_CENTRE | wx.LEFT, 8)
-        top_row_sizer.Add(self.sha_listchoice, 1, wx.ALL, 5)
-        top_row_sizer.Add((500, 10), proportion=1, flag=wx.EXPAND)
-        #top_row_sizer.AddSpacer(60)
-        top_row_sizer.Add(text_for_pcrbank, 2, wx.ALIGN_CENTRE, 5)
-        top_row_sizer.Add(self.pcr_bank_choice, 1, wx.ALL, 5)
-        middle_row_sizer.AddSpacer(5)
-        middle_row_sizer.Add(text_for_userinput, 2, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 5)
-        middle_row_sizer.Add(self.user_input, 7, wx.EXPAND, 5)
+        
+        text_width1 = self.sha_listtext.GetFullTextExtent("For PCR List & Extend: ")[0] + 5 
+        self.sha_listtext.SetMinSize((text_width1, -1))
+        self.sha_listtext.SetMaxSize((text_width1, -1))
+        left_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        left_sizer.Add(self.sha_listtext, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 2)  
+        left_sizer.Add(self.sha_listchoice, 0, wx.ALIGN_CENTER_VERTICAL)
+        
+        text_width2 = text_for_pcrbank.GetFullTextExtent("Choose your PCR Index:")[0] + 5  # +5px buffer
+        text_for_pcrbank.SetMinSize((text_width2, -1))
+        text_for_pcrbank.SetMaxSize((text_width2, -1))
+        right_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        right_sizer.Add(text_for_pcrbank, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 2)  # 2px spacing
+        right_sizer.Add(self.pcr_bank_choice, 0, wx.ALIGN_CENTER_VERTICAL)
+        
+        top_row_sizer.Add(left_sizer, 0,  wx.ALIGN_CENTER | wx.LEFT | wx.TOP | wx.BOTTOM, 5)
+        top_row_sizer.AddStretchSpacer(1)
+        top_row_sizer.Add(right_sizer, 0, wx.ALIGN_CENTER| wx.RIGHT | wx.TOP | wx.BOTTOM, 5)
+        
+        text_width3 = text_for_userinput.GetFullTextExtent("Input for PCR operations:")[0] + 5  # +5px buffer
+        text_for_userinput.SetMinSize((text_width3, -1))
+        text_for_userinput.SetMaxSize((text_width3, -1))
+        middle_row_sizer.Add(text_for_userinput, 2, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 5)  # 2px spacing
+        middle_row_sizer.Add(self.user_input, 7, wx.ALIGN_CENTER_VERTICAL , 5)
+        
         bottom_row_sizer.Add(button_pcrlistall, 1, wx.EXPAND | wx.ALL, 5)
         bottom_row_sizer.Add(button_pcrlist, 1, wx.EXPAND | wx.ALL, 5)
         bottom_row_sizer.Add(button_pcrextend, 1, wx.EXPAND | wx.ALL, 5)
@@ -504,6 +525,9 @@ class Tab_PCR(wx.Panel):
 class Tab_NVM(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+        global width_scale
+        global height_scale
+        global scale_factor
         
         # instantiate the objects for left
         text_for_nvm_attr = wx.StaticText(self, -1, "NVM attributes:")
@@ -512,42 +536,58 @@ class Tab_NVM(wx.Panel):
         # instantiate the objects for middle
         text_for_nvm_index = wx.StaticText(self, -1, "NVM index (in hex): ")
         self.nvm_index = wx.TextCtrl(self, -1)
+        self.nvm_index.SetMinSize((-1, int(30 * height_scale)))
         text_for_nvm_size = wx.StaticText(self, -1, "NVM size (in bytes): ")
         self.nvm_size = wx.TextCtrl(self, -1)
+        self.nvm_size.SetMinSize((-1, int(30 * height_scale)))        
         text_for_nvm_offset = wx.StaticText(self, -1, "NVM offset: ")
         self.nvm_offset = wx.TextCtrl(self, -1)
+        self.nvm_offset.SetMinSize((-1, int(30 * height_scale)))
         text_for_read_amt = wx.StaticText(self, -1, "Read size: ")
         self.read_amt = wx.TextCtrl(self, -1)
+        self.read_amt.SetMinSize((-1, int(30 * height_scale)))
         text_for_nvm_data = wx.StaticText(self, -1, "NVM data: ")
         self.nvm_data = wx.TextCtrl(self, -1)
+        self.nvm_data.SetMinSize((-1, int(30 * height_scale)))
         text_for_owner_auth = wx.StaticText(self, -1, "Owner Authorisation: ")
         self.owner_input = wx.TextCtrl(self, -1)
+        self.owner_input.SetMinSize((-1, int(30 * height_scale)))
         text_for_nv_auth = wx.StaticText(self, -1, "NV Authorisation: ")
         self.nv_auth_input = wx.TextCtrl(self, -1)
+        self.nv_auth_input.SetMinSize((-1, int(30 * height_scale)))
         button_nvdefine = wx.Button(self, -1, 'NV Define', size=(201, 33))
         button_nvwrite = wx.Button(self, -1, 'NV Write')
         button_nvwrite_file = wx.Button(self, -1, 'NV Write File', size=(201, 33))
         self.filename_input = wx.TextCtrl(self, -1, value="ifx_ecc_cert.crt", style=(wx.TE_CHARWRAP|wx.TE_MULTILINE), size=(201, 70))
         # Create open file dialog
+        
         button_nvrelease = wx.Button(self, -1, 'NV Release')
         button_reset_attr = wx.Button(self, -1, 'Reset to Default')
         button_nvread = wx.Button(self, -1, 'NV Read')
         button_nvrelock = wx.Button(self, -1, 'NV Read Lock')
         button_nvlist = wx.Button(self, -1, 'NV List')
         button_nv_read_rsa_cert = wx.Button(self, -1, 'Read RSA Cert')
+        
+        for button in [button_nvrelease, button_reset_attr, button_nvread, button_nvrelock, button_nvlist, button_nv_read_rsa_cert]:
+            # Scale physical dimensions
+            button.SetSize((
+                -1,
+                int(35 * height_scale)
+            ))
+            
         self.rsa_cert_index = wx.TextCtrl(self, -1,value="0x1c00002")
         button_nv_read_ecc_cert = wx.Button(self, -1, 'Read ECC Cert')
         self.ecc_cert_index = wx.TextCtrl(self, -1,value="0x1c0000a")
-        clearimage = wx.Image('../images/clear.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        clearimage = exec_cmd.get_scaled_bitmap('../images/clear.png', width_scale, height_scale)
         clearbutton = wx.BitmapButton(self, -1, clearimage)
-        # ~clearbutton = wx.BitmapButton(self, -1, img.clear.getBitmap())
-        backimage = wx.Image('../images/back.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        # ~ clearbutton = wx.BitmapButton(self, -1, img.clear.getBitmap())
+        backimage = exec_cmd.get_scaled_bitmap('../images/back.png', width_scale, height_scale)
         backbutton = wx.BitmapButton(self, -1, backimage)
-        # ~backbutton = wx.BitmapButton(self, -1, img.back.getBitmap())
+        # ~ backbutton = wx.BitmapButton(self, -1, img.back.getBitmap())
         
         #instantiate the objects for right
         self.right_txt_display = wx.TextCtrl(self, -1, style=(wx.TE_MULTILINE | wx.TE_READONLY))
-        self.right_txt_display.SetFont(wx.Font(11, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        self.right_txt_display.SetFont(wx.Font(int(11 *scale_factor), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
  
         # declare the sizers
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -1101,6 +1141,9 @@ class Tab_NVM(wx.Panel):
 class Tab_Handles(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+        global width_scale
+        global height_scale
+        global scale_factor
 
         # declare the sizers
         mainsizer = wx.BoxSizer(wx.VERTICAL)
@@ -1116,18 +1159,19 @@ class Tab_Handles(wx.Panel):
         button_evict_persistent = wx.Button(self, -1, 'Evict persistent')
         #~ button_flushSpecific = wx.Button(self, -1, 'Flush specific transient')
         self.txt_display = wx.TextCtrl(self, -1, style=(wx.TE_MULTILINE | wx.TE_READONLY))
-        self.txt_display.SetFont(wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-        clearimage = wx.Image('../images/clear.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        clearbutton = wx.BitmapButton(self, -1, clearimage)
-        # ~clearbutton = wx.BitmapButton(self, -1, img.clear.getBitmap())
+        self.txt_display.SetFont(wx.Font(int(12 *scale_factor), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
-        infoimage = wx.Image('../images/info.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        infoimage = exec_cmd.get_scaled_bitmap('../images/info.png', width_scale, height_scale)
         infobutton = wx.BitmapButton(self, -1, infoimage)
         # ~infobutton = wx.BitmapButton(self, -1, img.info.getBitmap())
         
-        backimage = wx.Image('../images/back.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        clearimage = exec_cmd.get_scaled_bitmap('../images/clear.png', width_scale, height_scale)
+        clearbutton = wx.BitmapButton(self, -1, clearimage)
+        # ~ clearbutton = wx.BitmapButton(self, -1, img.clear.getBitmap())
+
+        backimage = exec_cmd.get_scaled_bitmap('../images/back.png', width_scale, height_scale)
         backbutton = wx.BitmapButton(self, -1, backimage)
-        # ~backbutton = wx.BitmapButton(self, -1, img.back.getBitmap())
+        # ~ backbutton = wx.BitmapButton(self, -1, img.back.getBitmap())
 
         # attach the sizers to the main sizer
         mainsizer.Add(handle_sizer, 0, wx.EXPAND | wx.TOP, 5)
@@ -1225,10 +1269,16 @@ class Tab_Handles(wx.Panel):
 
 class Tab1Frame(wx.Frame):
     def __init__(self, parent, title):
-        resolution = getattr(parent, 'resolution', (1280, 720))
-        wx.Frame.__init__(self, parent, title="TPM Setup", size=resolution, style=(wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)))
+        self.base_width = 1280
+        self.base_height = 720
+        self.main_font_size = 12
+        self.title_font_size = 30
+        
+        winsize = getattr(parent, 'winsize', (1280, 720))
+        self.ScaleWinSize(winsize[0], winsize[1])
+        wx.Frame.__init__(self, parent, title="TPM Setup", size=winsize, style=(wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)))
         self.Centre(wx.BOTH)
-        main_menu_font = wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        main_menu_font = wx.Font(int(14 *scale_factor), wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         #~ main_menu_font = wx.Font(16, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetFont(main_menu_font)
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
@@ -1259,3 +1309,12 @@ class Tab1Frame(wx.Frame):
     def OnCloseWindow(self, evt):
         self.Parent.Show()
         self.Destroy()
+
+    def ScaleWinSize(self, width, height):
+        # Calculate scaling factors
+        global width_scale
+        global height_scale
+        global scale_factor
+        width_scale = width / self.base_width
+        height_scale = height / self.base_height
+        scale_factor = min(width_scale, height_scale)  # Maintain aspect ratio
